@@ -2,7 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   // ভুল: baseURL: "http://localhost:5000/api",
-  baseURL: "https://eventora-event-listing-server.vercel.app/",
+  baseURL: "https://eventora-event-listing-server.vercel.app/api",
   headers: {
     "Content-Type": "application/json",
   },
