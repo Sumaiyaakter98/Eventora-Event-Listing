@@ -102,7 +102,12 @@ export const loginUser = async (req, res) => {
       return res.status(403).json({ success: false, message: "Account not verified. Please verify your account first." });
     }
 
-    // সফল লগইনের জন্য টোকেন তৈরি
+    // নিশ্চিত করা হচ্ছে JWT secret আছে
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is missing in environment variables.");
+      return res.status(500).json({ success: false, message: "Server configuration error: JWT_SECRET is missing." });
+    }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7h" });
 
     res.status(200).json({
@@ -113,8 +118,8 @@ export const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
   } catch (error) {
     console.error("Login Error:", error.message);
