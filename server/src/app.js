@@ -40,6 +40,23 @@ app.get("/", (req, res) => {
   });
 });
 
+// Temporary debug endpoint - only enabled when DEBUG=1
+// Returns presence of critical environment variables (booleans only)
+app.get("/_debug/env", (req, res) => {
+  if (process.env.DEBUG !== "1") {
+    return res.status(404).json({ error: "Not found" });
+  }
+
+  const vars = {
+    MONGO_URI: !!process.env.MONGO_URI,
+    JWT_SECRET: !!process.env.JWT_SECRET,
+    NODE_ENV: !!process.env.NODE_ENV,
+    VERCEL: !!process.env.VERCEL,
+  };
+
+  return res.status(200).json({ debug: true, vars });
+});
+
 const PORT = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV !== "production" || process.env.VERCEL !== "1") {
