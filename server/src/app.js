@@ -17,7 +17,13 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  // 🔄 আপনার Vercel ফ্রন্টএন্ডের লাইভ URL-টি এখানে দিন (শেষে কোন '/' দিবেন না)
+  origin: "https://eventora-client.vercel.app", 
+  credentials: true, // কুকি বা অথরাইজেশন টোকেন পাস করার অনুমতি দেয়
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 
 // Routes
