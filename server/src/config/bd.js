@@ -14,14 +14,18 @@ const connectDB = async () => {
   }
 
   try {
-    const conn = await mongoose.connect(mongoUri);
+    const conn = await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 10000,
+    });
     console.log(`MongoDb connected:${conn.connection.host}`);
     console.log(`MongoDb DatabaseName:${conn.connection.name}`);
     return conn;
   } catch (error) {
     console.error(`Database Connection Error: ${error.message}`);
-    if (process.env.VERCEL !== "1") {
-      process.exit(1);
+    if (process.env.NODE_ENV === "production" || process.env.VERCEL === "1") {
+      throw error;
     }
     return null;
   }

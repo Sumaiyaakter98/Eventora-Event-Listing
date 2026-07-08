@@ -14,7 +14,7 @@ dotenv.config({ path: "./.env" });
 const app = express();
 
 // ডাটাবেজ কানেক্ট করা হচ্ছে
-connectDB();
+await connectDB();
 
 // Middleware
 // 🔄 ১. CORS কনফিগারেশন
