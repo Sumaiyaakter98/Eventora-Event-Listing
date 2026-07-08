@@ -10,7 +10,7 @@ import authRoutes from "./routes/auth.js";
 import eventsRoutes from "./routes/events.js";
 import bookingRoutes from "./routes/booking.js";
 
-dotenv.config();
+dotenv.config({ path: "./.env" });
 const app = express();
 
 // ডাটাবেজ কানেক্ট করা হচ্ছে
