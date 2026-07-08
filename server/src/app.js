@@ -18,12 +18,14 @@ connectDB();
 
 // Middleware
 // 🔄 ১. CORS কনফিগারেশন
-app.use(cors({
-  origin: true,
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 app.use(express.json());
 
 // Routes
@@ -31,16 +33,19 @@ app.use("/api/auth", authRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/booking", bookingRoutes);
 
-app.get('/', (req, res) => {
-    res.status(200).json({
-        message: "Welcome to Eventora API Server!",
-        status: "Running Successfully"
-    });
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Welcome to Eventora API Server!",
+    status: "Running Successfully",
+  });
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 
-export default app
+if (process.env.NODE_ENV !== "production" || process.env.VERCEL !== "1") {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+export default app;
