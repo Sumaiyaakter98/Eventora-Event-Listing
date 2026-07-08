@@ -17,13 +17,22 @@ const app = express();
 connectDB();
 
 // Middleware
+// 🔄 ১. CORS কনফিগারেশন
 app.use(cors({
-  // 🔄 আপনার Vercel ফ্রন্টএন্ডের লাইভ URL-টি এখানে দিন (শেষে কোন '/' দিবেন না)
-  origin: "https://eventora-client.vercel.app", 
-  credentials: true, // কুকি বা অথরাইজেশন টোকেন পাস করার অনুমতি দেয়
+  origin: true, // অথবা আপনার ফ্রন্টএন্ডের নির্দিষ্ট URL: "https://eventora-client.vercel.app"
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// 🔄 ২. প্রি-ফ্লাইট (OPTIONS) রিকোয়েস্টের জন্য এই হ্যান্ডেলারটি যোগ করুন (এটিই আসল ফিক্স)
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return res.sendStatus(200); // ২০৪ প্রি-ফ্লাইটকে সাকসেসফুলি ২০০ ওকে করে দেবে
+});
 app.use(express.json());
 
 // Routes
