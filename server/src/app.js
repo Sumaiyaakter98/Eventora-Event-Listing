@@ -24,9 +24,17 @@ app.use(
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    preflightContinue: false,
   }),
 );
+app.options("*", cors({ origin: true, credentials: true }));
 app.use(express.json());
+
+// Logging for request diagnostics
+app.use((req, res, next) => {
+  console.log(`Request: ${req.method} ${req.originalUrl}`);
+  next();
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -50,6 +58,14 @@ app.get("/_debug/env", (req, res) => {
   };
 
   return res.status(200).json({ debug: true, vars });
+});
+
+// Global error handler for better deployment diagnostics
+app.use((err, req, res, next) => {
+  console.error("Server error:", err);
+  res
+    .status(err.status || 500)
+    .json({ success: false, message: err.message || "Internal Server Error" });
 });
 
 const PORT = process.env.PORT || 5000;
